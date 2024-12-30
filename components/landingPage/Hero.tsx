@@ -1,9 +1,10 @@
 "use client";
-
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { CheckCircle, Clock, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 export function Hero() {
+  const router = useRouter();
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -100,6 +101,7 @@ export function Hero() {
             <Button
               size="lg"
               variant="default"
+              onClick={() => router.push("/dashboard")}
               className=" bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-base font-medium shadow-lg"
             >
               Get Started
