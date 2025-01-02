@@ -16,6 +16,8 @@ import {
 
 import { Header } from "./header";
 import { Sidebar } from "./sidebar";
+import { EisenhowerMatrix } from "./eisenhower-matrix";
+
 //As of now, many components and features are just dummy,will try to implement them in future
 //And layout needs improvement
 function QuickStats() {
@@ -127,9 +129,9 @@ export function Dashboard() {
             <Header activeSection={activeSection} />
           </div>
         )}
-        <main className="flex-1 p-6">
+        <main className="flex-1">
           {activeSection === "dashboard" && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
               <div className="lg:col-span-2 space-y-4">
                 <ProgressGraph />
                 <div className="grid grid-cols-1 md:grid-cols-2">
@@ -142,6 +144,8 @@ export function Dashboard() {
               </div>
             </div>
           )}
+
+          {activeSection === "eisenhower-matrix" && <EisenhowerMatrix />}
         </main>
       </div>
     </div>
