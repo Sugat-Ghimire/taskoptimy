@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { v4 as uuidv4 } from "uuid";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -96,7 +97,7 @@ export const EisenhowerMatrix: React.FC = () => {
 
   const addTask = (quadrant: QuadrantType) => {
     const newTask: Task = {
-      id: Date.now().toString(),
+      id: uuidv4(),
       text: "New Task",
       description: "",
     };
