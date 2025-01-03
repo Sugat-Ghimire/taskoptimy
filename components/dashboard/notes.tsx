@@ -112,61 +112,66 @@ export function Notes() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <Header activeSection="notes" />
-      <div className="max-w-7xl p-6 mx-auto space-y-6">
-        {/* Search and Add Note Bar */}
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="flex items-center gap-4"
-        >
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10 h-4 w-4" />
-            <Input
-              placeholder="Search notes..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white/80 backdrop-blur-sm border-gray-200 focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <Button
-            onClick={() => setIsAddingNote(true)}
-            className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+      {/* Sticky Header Section */}
+      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <Header activeSection="Notes" />
+        <div className="max-w-7xl mx-auto p-6 space-y-4">
+          {/* Search and Add Note Bar */}
+          <motion.div
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="flex items-center gap-4"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Create Note
-          </Button>
-        </motion.div>
-
-        {/* Categories */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="flex gap-2 flex-wrap"
-        >
-          <Button
-            variant={selectedCategory === "All" ? "default" : "outline"}
-            onClick={() => setSelectedCategory("All")}
-            className="rounded-full"
-          >
-            All
-          </Button>
-          {categories.map((category) => (
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search notes..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-white/80 backdrop-blur-sm border-gray-200 focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
             <Button
-              key={category}
-              variant={selectedCategory === category ? "default" : "outline"}
-              onClick={() => setSelectedCategory(category)}
+              onClick={() => setIsAddingNote(true)}
+              className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Create Note
+            </Button>
+          </motion.div>
+
+          {/* Categories */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="flex gap-2 flex-wrap"
+          >
+            <Button
+              variant={selectedCategory === "All" ? "default" : "outline"}
+              onClick={() => setSelectedCategory("All")}
               className="rounded-full"
             >
-              {category}
+              All
             </Button>
-          ))}
-        </motion.div>
+            {categories.map((category) => (
+              <Button
+                key={category}
+                variant={selectedCategory === category ? "default" : "outline"}
+                onClick={() => setSelectedCategory(category)}
+                className="rounded-full"
+              >
+                {category}
+              </Button>
+            ))}
+          </motion.div>
+        </div>
+      </div>
 
-        {/* Notes Grid */}
+      {/* Scrollable Notes Grid */}
+      <div className="max-w-7xl mx-auto p-6">
         <Card className="bg-white/70 backdrop-blur-sm border-gray-200">
           <CardContent className="p-6">
-            <ScrollArea className="h-[calc(100vh-12rem)]">
+            <ScrollArea className="h-[calc(100vh-16rem)]">
               <LayoutGroup>
                 <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   <AnimatePresence>
@@ -231,7 +236,7 @@ export function Notes() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-50  p-3 flex items-center justify-center"
+          className="fixed inset-0 bg-black bg-opacity-50 p-3 flex items-center justify-center"
           onClick={() => {
             setIsAddingNote(false);
             setActiveNote(null);
@@ -262,7 +267,7 @@ export function Notes() {
               ref={newNoteRef}
             />
             <div className="mb-4">
-              <label className="text-sm font-medium text-gray-700 mb-2 block">
+              <label className="text-sm font-medium text-gray-700 ml-1 mb-2 block">
                 Category
               </label>
               <div className="flex flex-wrap gap-2">
