@@ -16,8 +16,10 @@ import {
 
 import { Header } from "./header";
 import { Sidebar } from "./sidebar";
+
 import { EisenhowerMatrix } from "./eisenhower-matrix";
 import { Notes } from "./notes";
+import { Todo } from "./todo";
 
 //As of now, many components and features are just dummy,will try to implement them in future
 //And layout needs improvement
@@ -148,6 +150,7 @@ export function Dashboard() {
 
           {activeSection === "eisenhower-matrix" && <EisenhowerMatrix />}
           {activeSection === "notes" && <Notes />}
+          {activeSection === "todo" && <Todo />}
         </main>
       </div>
     </div>
