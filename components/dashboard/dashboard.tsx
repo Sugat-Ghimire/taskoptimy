@@ -21,6 +21,7 @@ import { EisenhowerMatrix } from "./eisenhower-matrix";
 import { Notes } from "./notes";
 import { Todo } from "./todo";
 import Calendar from "./calendar";
+import { KanbanBoard } from "./kanban-board";
 
 //As of now, many components and features are just dummy,will try to implement them in future
 //And layout needs improvement
@@ -153,6 +154,7 @@ export function Dashboard() {
           {activeSection === "notes" && <Notes />}
           {activeSection === "todo" && <Todo />}
           {activeSection === "calendar" && <Calendar />}
+          {activeSection === "kanban" && <KanbanBoard />}
         </main>
       </div>
     </div>

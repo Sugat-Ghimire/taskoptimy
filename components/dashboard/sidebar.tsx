@@ -11,6 +11,7 @@ import {
   Calendar,
   Settings,
   ChevronRight,
+  Kanban,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ const mainMenuItems = [
   { icon: FileText, label: "Notes", id: "notes" },
   { icon: CheckSquare, label: "To Do", id: "todo" },
   { icon: Calendar, label: "Calendar", id: "calendar" },
+  { icon: Kanban, label: "Kanban Board", id: "kanban" },
 ];
 
 export function Sidebar({ activeSection, setActiveSection }) {
