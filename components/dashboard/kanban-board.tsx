@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/dialog";
 import { Header } from "./header";
 
-// Add color options
 const cardColors = {
   blue: "bg-blue-100 border-blue-300 hover:bg-blue-200",
   yellow: "bg-yellow-100 border-yellow-300 hover:bg-yellow-200",
@@ -173,11 +172,11 @@ export function KanbanBoard() {
       <Header activeSection="kanban Board" />
       <div className="max-w-7xl mx-auto p-6">
         <div className="flex justify-center">
-          <div className="flex gap-6 pb-4 overflow-x-auto max-w-full">
+          <div className="flex gap-4 pb-4 overflow-hidden max-w-full">
             {columns.map((column) => (
               <div
                 key={column.id}
-                className="flex-shrink-0 w-80"
+                className="flex-shrink-0 w-80 p-3 relative -mt-1"
                 onDragOver={(e) => {
                   e.preventDefault();
                   handleDragOver(column.id);
@@ -187,9 +186,9 @@ export function KanbanBoard() {
                   handleDrop(column.id);
                 }}
               >
-                <Card className="h-full bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+                <Card className="h-24 bg-white/70 backdrop-blur-sm shadow-md hover:shadow-xl transition-all duration-300">
                   <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center justify-between">
                       <div>
                         <h3 className="font-semibold text-lg text-gray-800">
                           {column.title}
@@ -205,70 +204,71 @@ export function KanbanBoard() {
                           setSelectedColumnId(column.id);
                           setIsAddingCard(true);
                         }}
-                        className="hover:bg-indigo-50"
+                        className="hover:bg-blue-50"
                       >
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-
-                    <div className="space-y-3">
-                      <AnimatePresence>
-                        {column.cards.map((card) => (
-                          <motion.div
-                            key={card.id}
-                            layout
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            whileHover={{ scale: 1.01 }}
-                            className={`${
-                              cardColors[card.color]
-                            } p-4 rounded-lg shadow-sm group`}
-                            draggable
-                            onDragStart={() => handleDragStart(card)}
-                          >
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <h4 className="font-medium text-gray-800">
-                                  {card.title}
-                                </h4>
-                                {card.description && (
-                                  <p className="text-sm text-stone-600 mt-2">
-                                    {card.description}
-                                  </p>
-                                )}
-                              </div>
-                              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleEditCard(column.id, card);
-                                  }}
-                                  className="h-8 w-8 p-0"
-                                >
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDeleteCard(column.id, card.id);
-                                  }}
-                                  className="h-8 w-8 p-0 hover:text-rose-500"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
-                    </div>
                   </CardContent>
                 </Card>
+
+                <div className="space-y-3 mt-5 overflow-visible">
+                  <AnimatePresence>
+                    {column.cards.map((card) => (
+                      <motion.div
+                        key={card.id}
+                        layout
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        whileHover={{ scale: 1.02 }}
+                        className={`${
+                          cardColors[card.color]
+                        } p-4 rounded-lg shadow-lg group break-words`}
+                        draggable
+                        onDragStart={() => handleDragStart(card)}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-gray-800 mb-2 break-words">
+                              {card.title}
+                            </h4>
+                            {card.description && (
+                              <p className="text-sm text-gray-600 whitespace-pre-wrap break-words">
+                                {card.description}
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditCard(column.id, card);
+                              }}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteCard(column.id, card.id);
+                              }}
+                              className="h-8 w-8 p-0 hover:text-rose-500"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
               </div>
             ))}
           </div>
