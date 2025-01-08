@@ -88,7 +88,10 @@ export default function Calendar() {
                     value={newEventTime}
                     onChange={(e) => setNewEventTime(e.target.value)}
                   />
-                  <Button onClick={addEvent} className="w-full mt-2">
+                  <Button
+                    onClick={addEvent}
+                    className="w-full mt-2 bg-indigo-500"
+                  >
                     <Plus className="mr-2 h-4 w-4" /> Add Event
                   </Button>
                 </div>

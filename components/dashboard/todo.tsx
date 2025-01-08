@@ -164,7 +164,7 @@ export function Todo() {
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
               </select>
-              <Button onClick={addTodo}>
+              <Button onClick={addTodo} className="bg-indigo-500">
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
