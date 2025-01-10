@@ -7,9 +7,14 @@ import { Search, UserPlus, Bell } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { Button } from "@/components/ui/button";
 
+import { useRouter } from "next/navigation";
 export function Header({ activeSection }: { activeSection: string }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const router = useRouter();
 
+  const handleSignUpClick = () => {
+    router.push("/dashboard/profile");
+  };
   return (
     <header className="flex items-center justify-between border-b bg-card p-4">
       <div className="flex items-center space-x-4">
@@ -49,7 +54,7 @@ export function Header({ activeSection }: { activeSection: string }) {
         <Button variant="ghost" size="icon">
           <Bell className="h-5 w-5" />
         </Button>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={handleSignUpClick}>
           <UserPlus className="h-4 w-4 mr-2" />
           Sign Up
         </Button>
