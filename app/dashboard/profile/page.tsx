@@ -2,6 +2,7 @@ import { auth, signIn, signOut } from "@/auth";
 
 export default async function SignIn() {
   const session = await auth();
+
   const user = session?.user;
 
   return (
