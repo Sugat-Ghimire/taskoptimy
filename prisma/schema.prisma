@@ -16,6 +16,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   notes     Note[]
+  todos     Todo[]
 }
 
 model Note {
@@ -30,4 +31,17 @@ model Note {
   user      User      @relation(fields: [userId], references: [id])
 
   @@index([userId], map: "idx_user_id")
+}
+model Todo {
+  id         String   @id @default(dbgenerated("concat('todo_', replace((gen_random_uuid())::text, '-'::text, ''::text))"))
+  text       String
+  completed  Boolean  @default(false)
+  priority   String   
+  category   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "idx_todo_user_id")
 }
