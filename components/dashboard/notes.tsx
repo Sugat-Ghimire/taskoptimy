@@ -6,7 +6,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { v4 as uuidv4 } from "uuid";
 import { Trash2, Plus, Check, Search, Edit } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Header } from "./header";
@@ -46,14 +45,14 @@ export function Notes() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
   useEffect(() => {
-    const storedNotes = localStorage.getItem("notes");
-    if (storedNotes) {
-      setNotes(
-        JSON.parse(storedNotes, (key, value) =>
-          key === "createdAt" || key === "updatedAt" ? new Date(value) : value
-        )
-      );
-    }
+    const fetchNotes = async () => {
+      const response = await fetch("/api/notes");
+      if (response.ok) {
+        const data = await response.json();
+        setNotes(data);
+      }
+    };
+    fetchNotes();
   }, []);
 
   useEffect(() => {
@@ -61,42 +60,85 @@ export function Notes() {
       newNoteRef.current.focus();
     }
   }, [isAddingNote]);
+  const addNote = async () => {
+    if (!newNoteTitle.trim() && !newNoteContent.trim()) return;
 
-  const addNote = () => {
-    if (newNoteTitle.trim() || newNoteContent.trim()) {
-      const note: Note = {
-        id: uuidv4(),
-        title: newNoteTitle.trim(),
-        content: newNoteContent.trim(),
+    const response = await fetch("/api/notes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: newNoteTitle,
+        content: newNoteContent,
         color: newNoteColor,
-        createdAt: new Date(),
-        updatedAt: new Date(),
         category: noteCategory,
-      };
-      setNotes([note, ...notes]);
-      setIsAddingNote(false);
+      }),
+    });
+
+    if (response.ok) {
+      const newNote = await response.json();
+      setNotes([newNote, ...notes]);
       setNewNoteTitle("");
       setNewNoteContent("");
-      setNewNoteColor(newNoteColor);
       setNoteCategory("Personal");
+      setIsAddingNote(false);
     }
   };
 
-  const updateNote = (updatedNote: Note) => {
-    setNotes(
-      notes.map((note) =>
-        note.id === updatedNote.id
-          ? { ...updatedNote, updatedAt: new Date() }
-          : note
-      )
-    );
-    setActiveNote(null);
+  const updateNote = async (updatedNote: Note) => {
+    try {
+      const response = await fetch(`/api/notes/${updatedNote.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...updatedNote,
+          category: updatedNote.category,
+          updatedAt: new Date(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update note in the database");
+      }
+
+      // Update the note locally
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === updatedNote.id
+            ? { ...note, ...updatedNote, updatedAt: new Date() }
+            : note
+        )
+      );
+
+      setActiveNote(null);
+    } catch (error) {
+      console.error("Error updating note:", error);
+    }
   };
 
-  const deleteNote = (id: string) => {
-    setNotes(notes.filter((note) => note.id !== id));
-    if (activeNote?.id === id) {
-      setActiveNote(null);
+  const deleteNote = async (id: string) => {
+    try {
+      const response = await fetch(`/api/notes/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+      } else {
+        throw new Error(data.message || "Failed to delete note");
+      }
+    } catch (error) {
+      console.error("Error deleting note:", error);
     }
   };
 
@@ -274,11 +316,23 @@ export function Notes() {
                 {categories.map((category) => (
                   <Button
                     key={category}
-                    variant={noteCategory === category ? "default" : "outline"}
+                    variant={
+                      (activeNote ? activeNote.category : noteCategory) ===
+                      category
+                        ? "default"
+                        : "outline"
+                    }
                     size="sm"
-                    onClick={() => setNoteCategory(category)}
+                    onClick={() => {
+                      if (activeNote) {
+                        setActiveNote({ ...activeNote, category: category });
+                      } else {
+                        setNoteCategory(category);
+                      }
+                    }}
                     className={`rounded-full ${
-                      noteCategory === category
+                      (activeNote ? activeNote.category : noteCategory) ===
+                      category
                         ? "bg-blue-500 text-white"
                         : "hover:bg-blue-50"
                     }`}

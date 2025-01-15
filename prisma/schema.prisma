@@ -14,4 +14,20 @@ model User {
   imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  notes     Note[]
+}
+
+model Note {
+  id        String   @id @default(dbgenerated("concat('note_', replace((gen_random_uuid())::text, '-'::text, ''::text))"))
+  title     String
+  content   String
+  color     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  category  String?
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "idx_user_id")
 }
