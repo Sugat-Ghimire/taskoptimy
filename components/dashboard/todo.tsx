@@ -127,7 +127,7 @@ export function Todo() {
     <div className="flex flex-col h-screen bg-gray-50">
       <Header activeSection="to do" />
       <div className="flex-grow overflow-hidden p-6">
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-3">
           <h1 className="text-2xl text-center font-bold text-gray-900">
             Your tasks for {getDateString(new Date())}!
           </h1>
@@ -194,7 +194,7 @@ export function Todo() {
           </div>
           <div className="bg-white p-6 rounded-lg shadow-sm">
             <Tabs defaultValue={getDateString(new Date())} className="w-full">
-              <TabsList className="mb-4">
+              <TabsList className="mb-2">
                 {last7Days.map((day) => (
                   <TabsTrigger key={day} value={day}>
                     {day}
@@ -228,7 +228,7 @@ function TodoList({
   deleteTodo: (id: string) => void;
 }) {
   return (
-    <ScrollArea className="h-[400px]">
+    <ScrollArea className="h-[370px]">
       <AnimatePresence>
         {todos.map((todo) => (
           <TodoItem
@@ -265,8 +265,16 @@ function TodoItem({
     <motion.div
       layout
       initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -50 }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.2, ease: "easeOut" },
+      }}
+      exit={{
+        opacity: 0,
+        y: -10,
+        transition: { duration: 0.2, ease: "easeIn" },
+      }}
       className={`flex items-center justify-between mb-2 p-4 rounded-lg ${
         priorityColors[todo.priority]
       } relative`}
