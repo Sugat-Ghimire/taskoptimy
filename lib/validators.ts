@@ -6,3 +6,12 @@ export const noteSchema = z.object({
   color: z.string().optional(),
   category: z.string().optional(),
 });
+export const TodoItemSchema = z.object({
+  id: z.string(),
+  text: z.string(),
+  completed: z.boolean(),
+  priority: z.enum(["low", "medium", "high"]),
+  category: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});

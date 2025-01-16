@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { format, subDays, isToday, isYesterday } from "date-fns";
-import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -19,6 +18,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AlertCircle, CheckCircle2, Clock, Edit2, Plus, X } from "lucide-react";
 import { Header } from "./header";
+import { getSession } from "next-auth/react";
 
 type TodoItem = {
   id: string;
@@ -50,7 +50,6 @@ const PriorityIcon = ({ priority }: { priority: TodoItem["priority"] }) => {
 export function Todo() {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [newTodo, setNewTodo] = useState("");
-  const [editingTodo, setEditingTodo] = useState<TodoItem | null>(null);
 
   const [newTodoPriority, setNewTodoPriority] =
     useState<TodoItem["priority"]>("medium");
@@ -63,18 +62,44 @@ export function Todo() {
   ]);
   const [isAddingNewCategory, setIsAddingNewCategory] = useState(false);
 
-  const addTodo = () => {
-    if (newTodo.trim()) {
-      const newTodoItem: TodoItem = {
-        id: uuidv4(),
-        text: newTodo.trim(),
-        completed: false,
-        priority: newTodoPriority,
-        category: newTodoCategory || "Uncategorized",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      setTodos([...todos, newTodoItem]);
+  // Fetch Todos from the API
+
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const response = await fetch("/api/todos");
+        if (!response.ok) throw new Error("Failed to fetch todos");
+        const data = await response.json();
+        setTodos(data);
+      } catch (error) {
+        console.error("Error fetching todos:", error);
+      }
+    };
+    fetchTodos();
+  }, []);
+  if (!todos?.length) return;
+
+  const addTodo = async () => {
+    if (!newTodo.trim()) return;
+    const session = await getSession();
+    const userId = session?.user?.id;
+    try {
+      const response = await fetch("/api/todos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: newTodo.trim(),
+          completed: false,
+          priority: newTodoPriority,
+          category: newTodoCategory || "Uncategorized",
+          userId,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to add todo");
+      const data = await response.json();
+
+      setTodos((prev) => [...prev, data]);
       setNewTodo("");
       setNewTodoPriority("medium");
       setNewTodoCategory("");
@@ -84,45 +109,66 @@ export function Todo() {
         newTodoCategory &&
         !categories.includes(newTodoCategory)
       ) {
-        setCategories([...categories, newTodoCategory]);
+        setCategories((prev) => [...prev, newTodoCategory]);
         setIsAddingNewCategory(false);
       }
+    } catch (error) {
+      console.error("Error adding todo:", error);
     }
   };
 
-  const updateTodo = (id: string, updates: Partial<TodoItem>) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, ...updates, updatedAt: new Date() } : todo
-      )
-    );
-    setEditingTodo(null);
+  const updateTodo = async (id: string, updates: Partial<TodoItem>) => {
+    try {
+      const response = await fetch(`/api/todos/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) throw new Error("Failed to update todo");
+      const data = await response.json();
+
+      setTodos((prev) =>
+        prev.map((todo) => (todo.id === id ? { ...todo, ...data } : todo))
+      );
+    } catch (error) {
+      console.error("Error updating todo:", error);
+    }
   };
 
-  const deleteTodo = (id: string) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const deleteTodo = async (id: string) => {
+    try {
+      const response = await fetch(`/api/todos/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete todo");
+      setTodos((prev) => prev.filter((todo) => todo.id !== id));
+    } catch (error) {
+      console.error("Error deleting todo:", error);
+    }
   };
 
   const getDateString = (date: Date) => {
-    if (isToday(date)) return "today";
-    if (isYesterday(date)) return "yesterday";
-    return format(date, "MMM d");
+    const dateObj = new Date(date);
+    if (isToday(dateObj)) return "today";
+    if (isYesterday(dateObj)) return "yesterday";
+    return format(dateObj, "MMM d");
   };
-
-  const groupedTodos = todos.reduce((acc, todo) => {
-    const dateString = getDateString(todo.createdAt);
-    if (!acc[dateString]) {
-      acc[dateString] = [];
-    }
-    acc[dateString].push(todo);
-    return acc;
-  }, {} as Record<string, TodoItem[]>);
 
   const last7Days = Array.from({ length: 7 }, (_, i) => {
     const date = subDays(new Date(), i);
     return getDateString(date);
   });
 
+  const groupedTodos = todos.reduce((acc, todo) => {
+    const dateString = getDateString(new Date(todo.createdAt));
+    if (!acc[dateString]) {
+      acc[dateString] = [];
+    }
+    acc[dateString].push(todo);
+    return acc;
+  }, {} as Record<string, TodoItem[]>);
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       <Header activeSection="to do" />
