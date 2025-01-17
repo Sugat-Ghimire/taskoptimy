@@ -4,20 +4,19 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Dialog,
-  DialogContent,
   DialogHeader,
+  DialogContent,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { v4 as uuidv4 } from "uuid";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Edit, Trash2, Info, Grid, List } from "lucide-react";
+import { Plus, Edit, Trash2, List, Info, Grid } from "lucide-react";
 import { Header } from "./header";
 
-//As of now this is a primitive version of Eisenhower Matrix, will try to improve it in future
 type Task = {
   id: string;
   text: string;
@@ -25,6 +24,14 @@ type Task = {
 };
 
 type QuadrantType = "do" | "schedule" | "delegate" | "eliminate";
+
+type EditingTask = {
+  id?: string;
+  text: string;
+  description: string;
+  quadrant: QuadrantType;
+  isNew: boolean;
+};
 
 const quadrants: {
   id: QuadrantType;
@@ -65,9 +72,7 @@ export const EisenhowerMatrix: React.FC = () => {
     delegate: [],
     eliminate: [],
   });
-  const [editingTask, setEditingTask] = useState<
-    (Task & { quadrant: QuadrantType }) | null
-  >(null);
+  const [editingTask, setEditingTask] = useState<EditingTask | null>(null);
   const [view, setView] = useState<"matrix" | "list">("matrix");
 
   const containerVariants = {
@@ -96,25 +101,41 @@ export const EisenhowerMatrix: React.FC = () => {
   };
 
   const addTask = (quadrant: QuadrantType) => {
-    const newTask: Task = {
-      id: uuidv4(),
-      text: "New Task",
+    setEditingTask({
+      text: "",
       description: "",
-    };
-    setTasks((prev) => ({
-      ...prev,
-      [quadrant]: [...prev[quadrant], newTask],
-    }));
-    setEditingTask({ ...newTask, quadrant });
+      quadrant,
+      isNew: true,
+    });
   };
 
-  const updateTask = (updatedTask: Task & { quadrant: QuadrantType }) => {
-    setTasks((prev) => ({
-      ...prev,
-      [updatedTask.quadrant]: prev[updatedTask.quadrant].map((task) =>
-        task.id === updatedTask.id ? updatedTask : task
-      ),
-    }));
+  const updateTask = (updatedTask: EditingTask) => {
+    setTasks((prev) => {
+      if (updatedTask.isNew) {
+        const newTask: Task = {
+          id: uuidv4(),
+          text: updatedTask.text,
+          description: updatedTask.description,
+        };
+        return {
+          ...prev,
+          [updatedTask.quadrant]: [...prev[updatedTask.quadrant], newTask],
+        };
+      } else {
+        return {
+          ...prev,
+          [updatedTask.quadrant]: prev[updatedTask.quadrant].map((task) =>
+            task.id === updatedTask.id
+              ? {
+                  ...task,
+                  text: updatedTask.text,
+                  description: updatedTask.description,
+                }
+              : task
+          ),
+        };
+      }
+    });
     setEditingTask(null);
   };
 
@@ -123,6 +144,10 @@ export const EisenhowerMatrix: React.FC = () => {
       ...prev,
       [quadrant]: prev[quadrant].filter((task) => task.id !== taskId),
     }));
+  };
+
+  const handleDialogClose = () => {
+    setEditingTask(null);
   };
 
   const renderTask = (task: Task, quadrant: QuadrantType) => (
@@ -139,7 +164,15 @@ export const EisenhowerMatrix: React.FC = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setEditingTask({ ...task, quadrant })}
+            onClick={() =>
+              setEditingTask({
+                id: task.id,
+                text: task.text,
+                description: task.description,
+                quadrant,
+                isNew: false,
+              })
+            }
           >
             <Edit className="h-3 w-3" />
           </Button>
@@ -298,10 +331,12 @@ export const EisenhowerMatrix: React.FC = () => {
           </motion.p>
         </div>
       </section>
-      <Dialog open={!!editingTask} onOpenChange={() => setEditingTask(null)}>
+      <Dialog open={!!editingTask} onOpenChange={handleDialogClose}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Task</DialogTitle>
+            <DialogTitle>
+              {editingTask?.isNew ? "Add Task" : "Edit Task"}
+            </DialogTitle>
           </DialogHeader>
           {editingTask && (
             <div className="space-y-4 py-4">
@@ -329,7 +364,7 @@ export const EisenhowerMatrix: React.FC = () => {
                 />
               </div>
               <Button onClick={() => updateTask(editingTask)}>
-                Save Changes
+                {editingTask.isNew ? "Add Task" : "Save Changes"}
               </Button>
             </div>
           )}
