@@ -7,7 +7,6 @@ export const noteSchema = z.object({
   category: z.string().optional(),
 });
 export const TodoItemSchema = z.object({
-  id: z.string(),
   text: z.string(),
   completed: z.boolean(),
   priority: z.enum(["low", "medium", "high"]),

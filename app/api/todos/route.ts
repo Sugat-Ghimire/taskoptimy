@@ -8,17 +8,14 @@ const TodoInputSchema = TodoItemSchema.pick({
   priority: true,
   completed: true,
   category: true,
-}).extend({
-  userId: z.string(),
 });
 
 export async function GET(req: Request) {
   const session = await auth();
   const userId = session?.user?.id;
 
-  if (!userId) {
-    return NextResponse.json({ error: "User ID is required" }, { status: 400 });
-  }
+  if (!session?.user?.id)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const todos = await prisma.todo?.findMany({
@@ -39,12 +36,14 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    const session = await auth();
+    const userId = session?.user?.id;
     console.log(body);
 
     // Validates input using the Zod schema
     const validatedData = TodoInputSchema.parse(body);
 
-    const { text, priority, completed, category, userId } = validatedData;
+    const { text, priority, completed, category } = validatedData;
 
     // Creates a new todo in the database
     const todo = await prisma.todo.create({

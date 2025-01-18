@@ -18,7 +18,6 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AlertCircle, CheckCircle2, Clock, Edit2, Plus, X } from "lucide-react";
 import { Header } from "./header";
-import { getSession } from "next-auth/react";
 
 type TodoItem = {
   id: string;
@@ -80,8 +79,6 @@ export function Todo() {
 
   const addTodo = async () => {
     if (!newTodo.trim()) return;
-    const session = await getSession();
-    const userId = session?.user?.id;
     try {
       const response = await fetch("/api/todos", {
         method: "POST",
@@ -91,7 +88,6 @@ export function Todo() {
           completed: false,
           priority: newTodoPriority,
           category: newTodoCategory || "Uncategorized",
-          userId,
         }),
       });
 
