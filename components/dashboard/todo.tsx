@@ -65,13 +65,10 @@ export function Todo() {
 
   useEffect(() => {
     const fetchTodos = async () => {
-      try {
-        const response = await fetch("/api/todos");
-        if (!response.ok) throw new Error("Failed to fetch todos");
+      const response = await fetch("/api/todos");
+      if (response.ok) {
         const data = await response.json();
         setTodos(data);
-      } catch (error) {
-        console.error("Error fetching todos:", error);
       }
     };
     fetchTodos();
