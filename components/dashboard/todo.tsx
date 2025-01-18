@@ -77,7 +77,6 @@ export function Todo() {
     };
     fetchTodos();
   }, []);
-  if (!todos?.length) return;
 
   const addTodo = async () => {
     if (!newTodo.trim()) return;
