@@ -42,7 +42,7 @@ const defaultColumns: KanbanColumn[] = [
   { id: "inprogress", title: "In Progress", cards: [] },
   { id: "done", title: "Done", cards: [] },
 ];
-//primitive version of a kanban board
+
 export function KanbanBoard() {
   const [columns, setColumns] = useState<KanbanColumn[]>(defaultColumns);
   const [editingColumnId, setEditingColumnId] = useState<string>("");
@@ -58,6 +58,7 @@ export function KanbanBoard() {
   );
   const [editingCard, setEditingCard] = useState<KanbanCard | null>(null);
   const [isEditingCard, setIsEditingCard] = useState(false);
+
   const handleAddCard = (columnId: string) => {
     if (!newCardTitle.trim()) return;
 
@@ -79,6 +80,7 @@ export function KanbanBoard() {
     setNewCardColor("blue");
     setIsAddingCard(false);
   };
+
   const handleDeleteCard = (columnId: string, cardId: string) => {
     setColumns(
       columns.map((col) =>
@@ -88,6 +90,7 @@ export function KanbanBoard() {
       )
     );
   };
+
   const handleEditCard = (columnId: string, card: KanbanCard) => {
     setEditingCard(card);
     setEditingColumnId(columnId);
@@ -96,6 +99,7 @@ export function KanbanBoard() {
     setNewCardColor(card.color);
     setIsEditingCard(true);
   };
+
   const handleUpdateCard = () => {
     if (!editingCard || !newCardTitle.trim() || !editingColumnId) return;
 
@@ -119,7 +123,6 @@ export function KanbanBoard() {
       )
     );
 
-    // Reset states
     setIsEditingCard(false);
     setEditingCard(null);
     setEditingColumnId("");
@@ -132,8 +135,20 @@ export function KanbanBoard() {
     setDraggedCard(card);
   };
 
-  const handleDragOver = (columnId: string) => {
+  const handleDragOver = (e: React.DragEvent, columnId: string) => {
+    e.preventDefault();
     setDraggedOverColumn(columnId);
+  };
+
+  const handleDragEnd = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (!draggedOverColumn) {
+      setDraggedCard(null);
+      setDraggedOverColumn(null);
+      return;
+    }
+
+    handleDrop(draggedOverColumn);
   };
 
   const handleDrop = (columnId: string) => {
@@ -145,23 +160,25 @@ export function KanbanBoard() {
 
     if (!sourceColumn) return;
 
-    setColumns(
-      columns.map((col) => {
-        if (col.id === sourceColumn.id) {
-          return {
-            ...col,
-            cards: col.cards.filter((card) => card.id !== draggedCard.id),
-          };
-        }
-        if (col.id === columnId) {
-          return {
-            ...col,
-            cards: [...col.cards, draggedCard],
-          };
-        }
-        return col;
-      })
-    );
+    if (sourceColumn.id !== columnId) {
+      setColumns(
+        columns.map((col) => {
+          if (col.id === sourceColumn.id) {
+            return {
+              ...col,
+              cards: col.cards.filter((card) => card.id !== draggedCard.id),
+            };
+          }
+          if (col.id === columnId) {
+            return {
+              ...col,
+              cards: [...col.cards, draggedCard],
+            };
+          }
+          return col;
+        })
+      );
+    }
 
     setDraggedCard(null);
     setDraggedOverColumn(null);
@@ -176,11 +193,12 @@ export function KanbanBoard() {
             {columns.map((column) => (
               <div
                 key={column.id}
-                className="flex-shrink-0 w-80 p-3 relative -mt-1"
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  handleDragOver(column.id);
-                }}
+                className={`flex-shrink-0 w-80 p-3 relative -mt-1 rounded-lg transition-colors duration-200 ${
+                  draggedOverColumn === column.id
+                    ? "bg-blue-50/50"
+                    : "bg-transparent"
+                }`}
+                onDragOver={(e) => handleDragOver(e, column.id)}
                 onDrop={(e) => {
                   e.preventDefault();
                   handleDrop(column.id);
@@ -212,7 +230,7 @@ export function KanbanBoard() {
                   </CardContent>
                 </Card>
 
-                <div className="space-y-3 mt-5 overflow-visible">
+                <div className="space-y-3 mt-5 min-h-[200px] overflow-visible">
                   <AnimatePresence>
                     {column.cards.map((card) => (
                       <motion.div
@@ -224,9 +242,12 @@ export function KanbanBoard() {
                         whileHover={{ scale: 1.02 }}
                         className={`${
                           cardColors[card.color]
-                        } p-4 rounded-lg shadow-lg group break-words`}
+                        } p-4 rounded-lg shadow-lg group break-words ${
+                          draggedCard?.id === card.id ? "opacity-50" : ""
+                        }`}
                         draggable
                         onDragStart={() => handleDragStart(card)}
+                        onDragEnd={handleDragEnd}
                       >
                         <div className="flex justify-between items-start">
                           <div className="flex-1 min-w-0">
@@ -234,7 +255,7 @@ export function KanbanBoard() {
                               {card.title}
                             </h4>
                             {card.description && (
-                              <p className="text-sm text-gray-600 whitespace-pre-wrap break-words">
+                              <p className="text-sm text-gray-700 whitespace-pre-wrap break-words">
                                 {card.description}
                               </p>
                             )}
@@ -286,7 +307,7 @@ export function KanbanBoard() {
                   placeholder="Card title"
                   value={newCardTitle}
                   onChange={(e) => setNewCardTitle(e.target.value)}
-                  className="focus:ring-2 focus:ring-blue-500"
+                  className="focus:ring-2 focus:ring-blue-600"
                 />
               </div>
               <div className="space-y-2">
@@ -295,7 +316,7 @@ export function KanbanBoard() {
                   placeholder="Add a description..."
                   value={newCardDescription}
                   onChange={(e) => setNewCardDescription(e.target.value)}
-                  className="w-full min-h-[100px] rounded-md p-2 focus:ring-2 focus:ring-blue-500 resize-none"
+                  className="w-full min-h-[100px] rounded-md p-2 focus:ring-2 focus:ring-blue-600 resize-none"
                 />
               </div>
               <div className="space-y-2">
@@ -309,7 +330,7 @@ export function KanbanBoard() {
                       }
                       className={`w-8 h-8 rounded-full ${className} ${
                         newCardColor === color
-                          ? "ring-2 ring-blue-500 scale-110"
+                          ? "ring-2 ring-blue-600 scale-110"
                           : ""
                       } transition-all duration-200`}
                     />
@@ -326,7 +347,6 @@ export function KanbanBoard() {
           </DialogContent>
         </Dialog>
 
-        {/** */}
         <Dialog open={isEditingCard} onOpenChange={setIsEditingCard}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -346,7 +366,7 @@ export function KanbanBoard() {
                 <textarea
                   value={newCardDescription}
                   onChange={(e) => setNewCardDescription(e.target.value)}
-                  className="w-full min-h-[100px] rounded-md p-2 focus:ring-2 focus:ring-blue-500 resize-none"
+                  className="w-full min-h-[100px] rounded-md p-2 focus:ring-2 focus:ring-blue-600 resize-none"
                 />
               </div>
               <div className="space-y-2">
