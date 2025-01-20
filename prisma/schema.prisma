@@ -17,6 +17,7 @@ model User {
 
   notes     Note[]
   todos     Todo[]
+  kanbanboard    KanbanBoard[]
 }
 
 model Note {
@@ -44,4 +45,44 @@ model Todo {
   user       User     @relation(fields: [userId], references: [id])
 
   @@index([userId], map: "idx_todo_user_id")
+}
+
+//schemas for kanboard
+model KanbanBoard {
+  id        String   @id @default(dbgenerated("concat('kb_', replace((gen_random_uuid())::text, '-'::text, ''::text))"))
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  columns   KanbanColumn[]
+
+  @@index([userId], map: "idx_kanban_user_id")
+}
+
+model KanbanColumn {
+  id        String   @id @default(dbgenerated("concat('kc_', replace((gen_random_uuid())::text, '-'::text, ''::text))"))
+  title     String
+  order     Int
+  boardId   String
+  board     KanbanBoard @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards     KanbanCard[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([boardId], map: "idx_column_board_id")
+}
+
+model KanbanCard {
+  id          String   @id @default(dbgenerated("concat('kcard_', replace((gen_random_uuid())::text, '-'::text, ''::text))"))
+  title       String
+  description String?
+  color       String
+  order       Int
+  columnId    String
+  column      KanbanColumn @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([columnId], map: "idx_card_column_id")
 }
