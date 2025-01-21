@@ -191,7 +191,11 @@ export function Notes() {
             <Button
               variant={selectedCategory === "All" ? "default" : "outline"}
               onClick={() => setSelectedCategory("All")}
-              className="rounded-full"
+              className={`rounded-full ${
+                selectedCategory === "All"
+                  ? "bg-indigo-500 hover:bg-indigo-600 text-white"
+                  : "hover:bg-indigo-50"
+              }`}
             >
               All
             </Button>
@@ -200,7 +204,11 @@ export function Notes() {
                 key={category}
                 variant={selectedCategory === category ? "default" : "outline"}
                 onClick={() => setSelectedCategory(category)}
-                className="rounded-full"
+                className={`rounded-full ${
+                  selectedCategory === category
+                    ? "bg-indigo-500 hover:bg-indigo-600 text-white"
+                    : "hover:bg-indigo-50"
+                }`}
               >
                 {category}
               </Button>
