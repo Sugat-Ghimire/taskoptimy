@@ -225,7 +225,10 @@ export function Todo() {
                   </SelectContent>
                 </Select>
               )}
-              <Button onClick={addTodo}>
+              <Button
+                onClick={addTodo}
+                className="bg-indigo-500 hover:bg-indigo-600"
+              >
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
