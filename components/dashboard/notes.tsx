@@ -218,9 +218,9 @@ export function Notes() {
       </div>
 
       {/* Scrollable Notes Grid */}
-      <div className="max-w-7xl mx-auto p-6">
-        <Card className="bg-white/70 backdrop-blur-sm border-gray-200">
-          <CardContent className="p-6">
+      <div className="max-w-7xl mx-auto p-2">
+        <Card className="bg-white/70 backdrop-blur-sm">
+          <CardContent className="p-4">
             <ScrollArea className="h-[calc(100vh-16rem)]">
               <LayoutGroup>
                 <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
