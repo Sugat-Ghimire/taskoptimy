@@ -5,16 +5,23 @@ import { motion } from "framer-motion";
 const steps = [
   {
     title: "Sign Up",
-    description: "Create your TaskOptimy account in seconds.",
+    description:
+      "Quickly create your TaskOptimy account and unlock powerful productivity tools.",
   },
-  { title: "Add Tasks", description: "Input your tasks and set priorities." },
   {
-    title: "Optimize",
-    description: "Let TaskOptimy organize and optimize your workflow.",
+    title: "Organize & Prioritize",
+    description:
+      "Manage tasks effortlessly with a Kanban board, Eisenhower Matrix, and other advanced tools.",
+  },
+  {
+    title: "Streamline Workflow",
+    description:
+      "Leverage insights, track progress, and optimize your tasks for maximum efficiency.",
   },
   {
     title: "Boost Productivity",
-    description: "Complete tasks efficiently and achieve your goals.",
+    description:
+      "Achieve more with enhanced focus, organization, and efficient task execution.",
   },
 ];
 
