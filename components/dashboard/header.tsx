@@ -24,44 +24,83 @@ export function Header({ activeSection }: { activeSection: string }) {
   return (
     <header className="flex items-center justify-between border-b bg-card p-4">
       {/* Left Section */}
-      <div className="flex items-center space-x-4">
+      <motion.div
+        className="relative flex items-center space-x-2 p-2 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{
+          duration: 0.2,
+          ease: "easeOut",
+        }}
+        whileHover={{
+          scale: 1.005,
+          transition: { duration: 0.2 },
+        }}
+      >
+        <div className="absolute rounded-full bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 opacity-50 blur-xl -z-10" />
+
         {activeSection === "dashboard" ? (
           <motion.h2
-            className="text-2xl font-semibold text-primary"
+            className="text-2xl font-semibold text-white"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.3 }}
           >
             Welcome to TaskOptimy!
           </motion.h2>
         ) : activeSection === "kanban Board" ? (
           <div className="relative group">
-            <button className="flex items-center space-x-2 text-2xl font-semibold capitalize">
+            <motion.button
+              className="flex items-center space-x-2 text-2xl font-semibold text-white capitalize"
+              whileHover={{ scale: 1.005 }}
+              whileTap={{ scale: 0.95 }}
+            >
               <span>{activeSection}</span>
-              <ChevronDown className="w-5 h-5" />
-            </button>
+              <motion.div
+                animate={{ rotate: [0, 180] }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              >
+                <ChevronDown className="w-5 h-5" />
+              </motion.div>
+            </motion.button>
 
-            <div className="z-10 absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <motion.div
+              className="z-10 absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 invisible group-hover:visible transition-all duration-200"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
               <div className="py-1">
-                <a
+                <motion.a
                   href="#"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  whileHover={{ x: 5 }}
+                  transition={{ duration: 0.2 }}
                 >
                   Project Board 1
-                </a>
-                <a
+                </motion.a>
+                <motion.a
                   href="#"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  whileHover={{ x: 5 }}
+                  transition={{ duration: 0.2 }}
                 >
                   Create New Board
-                </a>
+                </motion.a>
               </div>
-            </div>
+            </motion.div>
           </div>
         ) : (
-          <h2 className="text-2xl font-semibold capitalize">{activeSection}</h2>
+          <motion.h2
+            className="text-2xl font-semibold text-white capitalize"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            {activeSection}
+          </motion.h2>
         )}
-      </div>
+      </motion.div>
 
       {/* Right Section */}
       <div className="flex items-center space-x-4">
