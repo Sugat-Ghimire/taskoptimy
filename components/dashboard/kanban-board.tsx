@@ -242,7 +242,7 @@ export function KanbanBoard() {
                         whileHover={{ scale: 1.02 }}
                         className={`${
                           cardColors[card.color]
-                        } p-4 rounded-lg shadow-lg group break-words ${
+                        } p-4 z-0 rounded-lg shadow-lg group break-words ${
                           draggedCard?.id === card.id ? "opacity-50" : ""
                         }`}
                         draggable
