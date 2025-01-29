@@ -68,10 +68,11 @@ export function Header({ activeSection }: { activeSection: string }) {
               className="flex items-center space-x-2 text-2xl font-semibold text-white capitalize"
               whileHover={{ scale: 1.005 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <span>{activeSection}</span>
               <motion.div
-                animate={{ rotate: [0, 180] }}
+                animate={{ rotate: isDropdownOpen ? 180 : 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               >
                 <ChevronDown className="w-5 h-5" />
