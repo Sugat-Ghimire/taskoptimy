@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { Search, UserPlus, Bell, ChevronDown, Plus } from "lucide-react";
+import { Search, UserPlus, Bell, ChevronDown, Plus, Clock } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
@@ -80,43 +80,56 @@ export function Header({ activeSection }: { activeSection: string }) {
             </motion.button>
             {isDropdownOpen && (
               <motion.div
-                className="z-10 absolute left-0 mt-5 -ml-3 w-64 rounded-lg shadow-lg bg-white ring-1 ring-black/5 overflow-hidden"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
+                className="z-[100] absolute left-0 mt-3 w-72 rounded-xl shadow-2xl bg-white/95 backdrop-blur-sm border border-gray-100 overflow-hidden"
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="p-2 space-y-1">
-                  <div className="px-3 py-2 text-sm font-medium text-gray-500">
-                    Your Boards
+                {/* Search Section */}
+                <div className="p-3 border-b border-gray-100">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Search boards..."
+                      className="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Boards List */}
+                <div className="max-h-[300px] overflow-y-auto">
+                  <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Recent Boards
                   </div>
 
-                  <motion.a
-                    href="#"
-                    className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gradient-to-r from-blue-50 to-purple-50 group"
-                    whileHover={{ x: 2 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div>
-                      <div className="font-medium">Project Board 1</div>
-                      <div className="text-xs text-gray-500">
-                        Last edited 2h ago
+                  <div className="space-y-0.5 p-2">
+                    {/* Board Item */}
+                    <motion.button
+                      className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-gradient-to-r from-blue-50/80 to-purple-50/80 group transition-all"
+                      whileHover={{ x: 4 }}
+                    >
+                      <div className="flex-1 text-left">
+                        <div className="font-medium text-gray-700 group-hover:text-gray-900">
+                          Project Alpha
+                        </div>
+                        <div className="text-xs text-gray-400 flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          Last viewed 2h ago
+                        </div>
                       </div>
-                    </div>
-                  </motion.a>
+                    </motion.button>
+                  </div>
+                </div>
 
-                  {/* Divider */}
-                  <div className="h-px bg-gray-100 my-1" />
-
-                  {/* Creates New Board Button */}
+                {/* Create New Board */}
+                <div className="p-2 bg-gray-50/50 border-t border-gray-100">
                   <motion.button
-                    className="flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm font-medium text-blue-600 hover:bg-blue-50 group"
-                    whileHover={{ x: 2 }}
-                    transition={{ duration: 0.2 }}
+                    className="flex items-center gap-2 w-full p-2 rounded-lg text-blue-600 hover:bg-blue-50/50 font-medium"
+                    whileHover={{ x: 4 }}
                   >
-                    <div className="w-8 h-8 rounded bg-blue-100 flex items-center justify-center">
-                      <Plus className="w-4 h-4" />
-                    </div>
-                    <span>Create New Board</span>
+                    <Plus className="w-5 h-5" />
+                    Create New Board
                   </motion.button>
                 </div>
               </motion.div>
