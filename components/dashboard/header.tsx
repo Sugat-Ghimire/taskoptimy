@@ -86,13 +86,18 @@ export function Header({ activeSection }: { activeSection: string }) {
                 transition={{ duration: 0.2 }}
               >
                 {/* Search Section */}
-                <div className="p-3 border-b border-gray-100">
+                <div
+                  className="p-3 border-b border-gray-100"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div className="relative">
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                     <input
                       type="text"
                       placeholder="Search boards..."
                       className="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
+                      onClick={(e) => e.stopPropagation()}
+                      onFocus={(e) => e.stopPropagation()}
                     />
                   </div>
                 </div>
