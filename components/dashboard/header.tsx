@@ -80,14 +80,14 @@ export function Header({ activeSection }: { activeSection: string }) {
             </motion.button>
             {isDropdownOpen && (
               <motion.div
-                className="z-[100] absolute left-0 mt-3 w-72 rounded-xl shadow-2xl bg-white/95 backdrop-blur-sm border border-gray-100 overflow-hidden"
+                className="z-[9999] absolute left-0 mt-3 w-72 rounded-xl shadow-xl bg-white border border-gray-200 overflow-hidden"
                 initial={{ opacity: 0, y: -10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.2 }}
               >
                 {/* Search Section */}
                 <div
-                  className="p-3 border-b border-gray-100"
+                  className="p-3 border-b border-gray-200"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="relative">
@@ -95,7 +95,7 @@ export function Header({ activeSection }: { activeSection: string }) {
                     <input
                       type="text"
                       placeholder="Search boards..."
-                      className="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-10 pr-4 py-2 text-sm bg-gray-50/80 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
                       onClick={(e) => e.stopPropagation()}
                       onFocus={(e) => e.stopPropagation()}
                     />
