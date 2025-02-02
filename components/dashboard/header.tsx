@@ -80,7 +80,7 @@ export function Header({ activeSection }: { activeSection: string }) {
             </motion.button>
             {isDropdownOpen && (
               <motion.div
-                className="z-[9999] absolute left-0 mt-3 w-72 rounded-xl shadow-xl bg-white border border-gray-200 overflow-hidden"
+                className="z-[9999] absolute -left-3 mt-5 w-72 rounded-xl shadow-xl bg-white border border-gray-200 overflow-hidden"
                 initial={{ opacity: 0, y: -10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.2 }}
