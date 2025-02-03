@@ -90,7 +90,7 @@ export default function Calendar() {
                   />
                   <Button
                     onClick={addEvent}
-                    className="w-full mt-2 bg-indigo-500"
+                    className="w-full mt-2 bg-indigo-500 hover:bg-indigo-600"
                   >
                     <Plus className="mr-2 h-4 w-4" /> Add Event
                   </Button>
