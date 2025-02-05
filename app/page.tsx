@@ -17,6 +17,11 @@ const EisenhowerMatrix = dynamic(() =>
     (mod) => mod.EisenhowerMatrix
   )
 );
+const KanbanSection = dynamic(() =>
+  import("@/components/landingPage/KanbanSection").then(
+    (mod) => mod.KanbanSection
+  )
+);
 const Footer = dynamic(() =>
   import("@/components/landingPage/Footer").then((mod) => mod.Footer)
 );
@@ -68,6 +73,9 @@ export default function Home() {
       </AnimatedSection>
       <AnimatedSection>
         <EisenhowerMatrix />
+      </AnimatedSection>
+      <AnimatedSection>
+        <KanbanSection />
       </AnimatedSection>
       <AnimatedSection>
         <Footer />
