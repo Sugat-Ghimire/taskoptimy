@@ -229,11 +229,11 @@ export function Notes() {
                       <motion.div
                         key={note.id}
                         layout
-                        initial={{ scale: 0.8, opacity: 0 }}
+                        initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.8, opacity: 0 }}
-                        whileHover={{ y: -5 }}
-                        className={`rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 overflow-hidden ${note.color}`}
+                        whileHover={{ y: -4 }}
+                        className={`rounded-xl shadow-sm hover:shadow-xl transition-all duration-100 overflow-hidden ${note.color}`}
                       >
                         <div className="flex flex-col p-4 h-full">
                           <h3 className="font-semibold text-lg mb-2">
