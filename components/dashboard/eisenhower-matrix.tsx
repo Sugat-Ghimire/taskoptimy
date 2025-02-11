@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogHeader,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -14,7 +15,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Edit, Trash2, List, Info, Grid } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  List,
+  Info,
+  Grid,
+  AlertCircle,
+  Calendar,
+  Users,
+} from "lucide-react";
 import { Header } from "./header";
 
 type Task = {
@@ -285,25 +296,94 @@ export const EisenhowerMatrix: React.FC = () => {
                   Info
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="sm:max-w-[525px]">
                 <DialogHeader>
-                  <DialogTitle>Using the Eisenhower Matrix</DialogTitle>
+                  <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    Using the Eisenhower Matrix
+                  </DialogTitle>
+                  <DialogDescription className="text-gray-600 mt-2">
+                    Prioritize your tasks effectively using this time-tested
+                    method
+                  </DialogDescription>
                 </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <p>
-                    The Eisenhower Matrix helps you prioritize tasks based on
-                    their importance and urgency:
+                <div className="space-y-6 py-6">
+                  <p className="text-gray-700 leading-relaxed">
+                    The Eisenhower Matrix is a powerful decision-making tool
+                    that helps you organize tasks based on their importance and
+                    urgency:
                   </p>
-                  <ul className="list-disc list-inside space-y-2">
-                    <li>Do: Important and Urgent tasks</li>
-                    <li>Schedule: Important but Not Urgent tasks</li>
-                    <li>Delegate: Not Important but Urgent tasks</li>
-                    <li>Eliminate: Not Important and Not Urgent tasks</li>
-                  </ul>
-                  <p>
-                    Organize your tasks in each quadrant to improve your
-                    productivity.
-                  </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      className="p-4 rounded-lg bg-red-50 border border-red-100"
+                    >
+                      <h3 className="font-semibold text-red-700 flex items-center gap-2">
+                        <div className="p-1.5 rounded-md bg-red-100">
+                          <AlertCircle className="h-4 w-4" />
+                        </div>
+                        Do First
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-2">
+                        Important and Urgent tasks that require immediate
+                        attention
+                      </p>
+                    </motion.div>
+
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      className="p-4 rounded-lg bg-blue-50 border border-blue-100"
+                    >
+                      <h3 className="font-semibold text-blue-700 flex items-center gap-2">
+                        <div className="p-1.5 rounded-md bg-blue-100">
+                          <Calendar className="h-4 w-4" />
+                        </div>
+                        Schedule
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-2">
+                        Important but Not Urgent tasks that need planning
+                      </p>
+                    </motion.div>
+
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      className="p-4 rounded-lg bg-yellow-50 border border-yellow-100"
+                    >
+                      <h3 className="font-semibold text-yellow-700 flex items-center gap-2">
+                        <div className="p-1.5 rounded-md bg-yellow-100">
+                          <Users className="h-4 w-4" />
+                        </div>
+                        Delegate
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-2">
+                        Not Important but Urgent tasks that can be assigned
+                      </p>
+                    </motion.div>
+
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      className="p-4 rounded-lg bg-gray-50 border border-gray-100"
+                    >
+                      <h3 className="font-semibold text-gray-700 flex items-center gap-2">
+                        <div className="p-1.5 rounded-md bg-gray-100">
+                          <Trash2 className="h-4 w-4" />
+                        </div>
+                        Eliminate
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-2">
+                        Not Important and Not Urgent tasks to reconsider
+                      </p>
+                    </motion.div>
+                  </div>
+
+                  <div className="mt-6 p-4 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100">
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      💡 <span className="font-medium">Pro Tip:</span> Focus on
+                      completing &quot;Do First&quot; tasks while planning ahead
+                      for &quot;Schedule&quot; items. Learn to delegate
+                      effectively and minimize time spent on tasks that could be
+                      eliminated.
+                    </p>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
