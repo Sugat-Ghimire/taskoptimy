@@ -1,23 +1,28 @@
-taskoptimy 🚀
-A smart task management app using the Eisenhower Matrix and Kanban Board.
+# taskoptimy 🚀
 
-🚧 Status: In Development
-This project is currently under active development. Some features may not be fully functional.
+**Smart task management with the Eisenhower Matrix, Kanban Board, Notes, To-Do Lists and Calendar.**
 
-🔧 Tech Stack
-Next.js (App Router)
+## 📌 Overview
 
-TypeScript
+TaskOptimy helps users **prioritize tasks effectively**, organize workflows, and track deadlines seamlessly. It combines the power of:
 
-Tailwind CSS
+- ✅ **Kanban Board** for visual task management
+- ✅ **Eisenhower Matrix** for smart prioritization
+- 🔄 **Task Sync & Persistence** (WIP)
+- 🔒 **Google OAuth Authentication**
+- 📝 **Notes & To-Do Lists**
+- 📅 **Calendar for Events & Deadlines** _(Planned)_
+- 📊 **Analytics & Productivity Insights** _(Planned)_
 
-PostgreSQL & Prisma
+## 🔧 Tech Stack
 
-📌 Features (Planned & In Progress)
-✅ Kanban Board for Task Organization
-✅ Eisenhower Matrix for Prioritization
-📝 Notes & To-Dos
-🔄 Task Sync & Persistence (WIP)
-🔒 Authentication with Google OAuth
-📅 Calendar for Events & Deadlines (Planned)
-📊 Analytics & Insights (Planned)
+- **Next.js** (App Router)
+- **TypeScript**
+- **Tailwind CSS**
+- **Prisma & PostgreSQL**
+
+## 🚧 Development Status
+
+TaskOptimy is **under active development**. Some features may not be fully functional yet. Stay tuned for updates!
+
+---
