@@ -140,8 +140,11 @@ export function KanbanBoard() {
     setDraggedOverColumn(columnId);
   };
 
-  const handleDragEnd = (e: React.DragEvent) => {
-    e.preventDefault();
+  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent) => {
+    if (event instanceof MouseEvent) {
+      event.preventDefault();
+    }
+
     if (!draggedOverColumn) {
       setDraggedCard(null);
       setDraggedOverColumn(null);

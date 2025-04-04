@@ -79,7 +79,7 @@ export function Footer() {
             </div>
             <blockquote className="border-l-4 border-blue-600 pl-4 py-2">
               <p className="text-gray-800 italic font-medium">
-                Every small step forward is proof that you're stronger than
+                Every small step forward is proof that you&apos;re stronger than
                 yesterday. Keep going, even if the progress feels invisible
                 today—it’s building the foundation for tomorrow.
               </p>

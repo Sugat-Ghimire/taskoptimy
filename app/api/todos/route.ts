@@ -10,7 +10,7 @@ const TodoInputSchema = TodoItemSchema.pick({
   category: true,
 });
 
-export async function GET(req: Request) {
+export async function GET() {
   const session = await auth();
   const userId = session?.user?.id;
 
@@ -24,10 +24,8 @@ export async function GET(req: Request) {
     });
     return NextResponse.json(todos);
   } catch (error) {
-    console.log(error);
-
     return NextResponse.json(
-      { error: "Failed to fetch todos" },
+      { error: `Failed to fetch todos, Error message : ${error}` },
       { status: 500 }
     );
   }
@@ -35,19 +33,25 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
     const session = await auth();
-    const userId = session?.user?.id;
-    console.log(body);
 
-    // Validates input using the Zod schema
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await req.json();
     const validatedData = TodoInputSchema.parse(body);
-
     const { text, priority, completed, category } = validatedData;
 
-    // Creates a new todo in the database
+    // Creates a new todo in the database with guaranteed userId
     const todo = await prisma.todo.create({
-      data: { text, completed, priority, category, userId },
+      data: {
+        text,
+        completed,
+        priority,
+        category,
+        userId: session.user.id,
+      },
     });
 
     return NextResponse.json(todo, { status: 201 });

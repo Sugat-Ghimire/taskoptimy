@@ -26,7 +26,12 @@ const mainMenuItems = [
   { icon: Kanban, label: "Kanban Board", id: "kanban" },
 ];
 
-export function Sidebar({ activeSection, setActiveSection }) {
+interface SidebarProps {
+  activeSection: string;
+  setActiveSection: (section: string) => void;
+}
+
+export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (

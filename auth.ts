@@ -27,10 +27,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return true;
     },
-    async session({ session, user }) {
+    async session({ session }) {
       const dbUser = await prisma.user.findUnique({
         where: { email: session.user.email },
       });
+      if (!dbUser) throw new Error("User not found");
       session.user.id = dbUser.id; // Adds user ID to session
       return session;
     },

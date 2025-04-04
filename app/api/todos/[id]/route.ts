@@ -3,9 +3,9 @@ import { prisma } from "@/lib/prisma";
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   const { text, completed, priority, category } = await req.json();
 
   if (!id) {
@@ -20,7 +20,7 @@ export async function PUT(
     return NextResponse.json(todo);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to update todo" },
+      { error: `Failed to update todo,Error message: ${error}` },
       { status: 500 }
     );
   }
@@ -28,9 +28,9 @@ export async function PUT(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
 
   if (!id) {
     return NextResponse.json({ error: "Todo ID is required" }, { status: 400 });
@@ -41,7 +41,7 @@ export async function DELETE(
     return NextResponse.json({ message: "Todo deleted successfully" });
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to delete todo" },
+      { error: `Failed to delete todo,Error message: ${error}` },
       { status: 500 }
     );
   }

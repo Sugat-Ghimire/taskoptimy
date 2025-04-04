@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { noteSchema } from "@/lib/validators";
 import { auth } from "@/auth";
 
-export async function GET(req: Request) {
+export async function GET() {
   const session = await auth();
 
   if (!session?.user?.id)
@@ -29,13 +29,22 @@ export async function POST(req: Request) {
 
     const newNote = await prisma.note.create({
       data: {
-        ...validated,
+        title: validated.title,
+        content: validated.content ?? "", // Provides default empty string
+        color: validated.color ?? "#ffffff",
+        category: validated.category ?? null,
         userId: session.user.id,
       },
     });
 
     return NextResponse.json(newNote, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    return NextResponse.json(
+      { error: "An unexpected error occurred" },
+      { status: 400 }
+    );
   }
 }

@@ -1,13 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 import { noteSchema } from "@/lib/validators";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
 
   const note = await prisma.note.findUnique({
     where: { id },
@@ -21,9 +21,9 @@ export async function GET(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   const body = await req.json();
 
   try {
@@ -35,18 +35,22 @@ export async function PUT(
 
     return NextResponse.json(updatedNote);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    const errorMessage =
+      error instanceof Error ? error.message : "Something went wrong";
+    return NextResponse.json({ error: errorMessage }, { status: 400 });
   }
 }
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
+
   try {
     await prisma.note.delete({
       where: {
-        id: params.id,
+        id,
       },
     });
 

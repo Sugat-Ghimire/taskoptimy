@@ -61,7 +61,7 @@ export const EisenhowerMatrix: React.FC = () => {
               description: "Not Important and Not Urgent",
               color: "bg-blue-100",
             },
-          ].map((quadrant, index) => (
+          ].map((quadrant) => (
             <motion.div
               key={quadrant.title}
               className={`p-6 rounded-lg shadow-md ${quadrant.color} will-change-transform`}
