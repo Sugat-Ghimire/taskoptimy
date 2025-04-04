@@ -59,7 +59,6 @@ export async function DELETE(
       message: "Note deleted successfully",
     });
   } catch (error) {
-    console.error("Error deleting note:", error);
     return NextResponse.json(
       { success: false, message: "Error deleting note" },
       { status: 500 }
