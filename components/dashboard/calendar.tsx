@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,8 @@ import { X, Plus } from "lucide-react";
 import { Header } from "./header";
 import { v4 as uuidv4 } from "uuid";
 
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
 type Event = {
   id: string;
   title: string;
@@ -57,11 +58,10 @@ export default function Calendar() {
               <CardTitle className="text-2xl font-bold">Calendar</CardTitle>
             </CardHeader>
             <CardContent>
-              <CalendarComponent
+              <DayPicker
                 mode="single"
-                selected={date}
+                selected={new Date()}
                 onSelect={setDate}
-                className="rounded-md border"
               />
             </CardContent>
           </Card>
